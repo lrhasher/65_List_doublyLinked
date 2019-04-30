@@ -3,16 +3,14 @@
  */
 
 public class List_inChainOfNodes{
-    private Node headSentinel;
-    private Node tailSentinel;
+    private Node sentinel;
 
 
     /**
       Construct an empty list
      */
     public List_inChainOfNodes() {
-        headSentinel = new Node( null, tailSentinel, null);
-        tailSentinel = new Node( null, null, headSentinel);
+        sentinel = new Node( null, sentinel, sentinel);
     }
 
     /**
@@ -20,7 +18,7 @@ public class List_inChainOfNodes{
      */
     public int size() {
         // recursive approach seems more perspicuous
-        return size( headSentinel);
+        return size( sentinel);
     }
 
     // recursively-called helper
@@ -39,7 +37,7 @@ public class List_inChainOfNodes{
     public String toString() {
         String stringRep = size() + " elements [";
 
-        for( Node node = tailSentinel.getPreviousNode()
+        for( Node node = sentinel.getPreviousNode()
            ; node != null
            ; node = node.getPreviousNode() )
             stringRep += node.getCargo() + ",";
@@ -53,8 +51,8 @@ public class List_inChainOfNodes{
       @return true, in keeping with conventions yet to be discussed
      */
      public boolean addAsHead( Object val) {
-        headSentinel.setNextNode(
-          new Node( val, headSentinel.getNextNode(), headSentinel));
+        sentinel.setNextNode(
+          new Node( val, sentinel.getNextNode(), sentinel));
         return true;
      }
 
@@ -69,7 +67,7 @@ public class List_inChainOfNodes{
 
         Node node;
         int upTo;  // comma operator precludes declaration in FOR
-        for( upTo = 0   , node = headSentinel
+        for( upTo = 0   , node = sentinel
            ; upTo < index
            ; upTo++     , node = node.getNextNode()
            )
@@ -118,12 +116,16 @@ public class List_inChainOfNodes{
      */
     public boolean add( int index, Object value) {
         Node newNode = new Node( value);
-        Node beforeNew = getNodeBefore( index);
-        Node afterNew = getNode(index);
-        newNode.setNextNode( afterNew);
-        newNode.setPreviousNode( beforeNew);
+        Node beforeNew = getNodeBefore(index);
+        Node afterNew = beforeNew.getNextNode();
         beforeNew.setNextNode( newNode);
+
+
+        newNode.setPreviousNode( beforeNew);
+        newNode.setNextNode( afterNew);
         afterNew.setPreviousNode( newNode);
+
+
         return true;
     }
 
